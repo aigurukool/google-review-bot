@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share Your Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDF6EC;
+    --card: #FFFFFF;
+    --accent: #C8553D;
+    --accent-hover: #A8432F;
+    --text: #2B2B2B;
+    --text-muted: #6B6B6B;
+    --border: #E8DFD0;
+    --success: #4A7C59;
+    --star: #E9A23B;
+    --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px;
+  }
+
+  .container {
+    max-width: 440px;
+    width: 100%;
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .header .logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin: 0 auto 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  /* Step indicators */
+  .steps {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .step-dot {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .step-dot.active {
+    background: var(--accent);
+  }
+
+  /* Star rating */
+  .star-section {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .star-section label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stars {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .stars span {
+    font-size: 36px;
+    cursor: pointer;
+    color: var(--border);
+    transition: color 0.15s, transform 0.15s;
+    user-select: none;
+  }
+
+  .stars span.filled { color: var(--star); }
+  .stars span:hover { transform: scale(1.15); }
+
+  /* Language select */
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .lang-btn {
+    padding: 10px 4px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+
+  .lang-btn:hover { border-color: var(--accent); }
+  .lang-btn.selected {
+    border-color: var(--accent);
+    background: rgba(200, 85, 61, 0.08);
+    color: var(--accent);
+  }
+
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-primary:disabled {
+    background: var(--border);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    margin-top: 8px;
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Review display */
+  .review-box {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 16px;
+    min-height: 100px;
+    white-space: pre-wrap;
+  }
+
+  .review-box[contenteditable] {
+    outline: none;
+    border: 1.5px solid var(--border);
+    cursor: text;
+  }
+
+  .review-box[contenteditable]:focus {
+    border-color: var(--accent);
+  }
+
+  .edit-hint {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .btn-copy-go {
+    background: var(--success);
+    color: white;
+  }
+
+  .btn-copy-go:hover { background: #3d6a4a; transform: translateY(-1px); }
+
+  /* Loading */
+  .loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px 0;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .loader .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Success screen */
+  .success-screen {
+    text-align: center;
+    padding: 32px 0;
+  }
+
+  .success-screen .check {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--success);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 16px;
+  }
+
+  .success-screen h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .success-screen p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* Error */
+  .error-msg {
+    background: #FEF2F2;
+    color: #991B1B;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .limit-msg {
+    text-align: center;
+    padding: 32px 0;
+  }
+
+  .limit-msg h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .limit-msg p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .powered-by {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 16px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <!-- Logo will be replaced per business. Using initial as fallback -->
+    <div class="logo" id="bizLogo">R</div>
+    <h1 id="bizName">Réussi Academy</h1>
+    <p>We'd love to hear about your experience!</p>
+  </div>
+
+  <!-- STEP 1: Rating + Language -->
+  <div class="card" id="step1">
+    <div class="steps">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="star-section">
+      <label>How would you rate us?</label>
+      <div class="stars" id="starRating">
+        <span onclick="setRating(1)">★</span>
+        <span onclick="setRating(2)">★</span>
+        <span onclick="setRating(3)">★</span>
+        <span onclick="setRating(4)">★</span>
+        <span onclick="setRating(5)">★</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Which language did you study?</label>
+      <div class="lang-grid" id="langGrid">
+        <!-- Populated dynamically from config -->
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnGenerate" disabled onclick="generateReview()">
+      Generate My Review
+    </button>
+  </div>
+
+  <!-- STEP 2: Review display + edit -->
+  <div class="card" id="step2" style="display:none;">
+    <div class="steps">
+      <div class="step-dot active"></div>
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div id="loadingState" style="display:none;">
+      <div class="loader">
+        <div class="spinner"></div>
+        <span>Crafting your review...</span>
+      </div>
+    </div>
+
+    <div id="reviewState" style="display:none;">
+      <div class="review-box" id="reviewText" contenteditable="true"></div>
+      <div class="edit-hint">✏️ Tap above to edit if you'd like</div>
+
+      <div id="errorMsg" class="error-msg" style="display:none;"></div>
+
+      <button class="btn btn-copy-go" onclick="copyAndGo()">
+        📋 Copy & Go to Google Reviews
+      </button>
+      <button class="btn btn-outline" onclick="regenerate()">
+        🔄 Generate a different review
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Success -->
+  <div class="card" id="step3" style="display:none;">
+    <div class="steps">
+      <div class="step-dot active"></div>
+      <div class="step-dot active"></div>
+      <div class="step-dot active"></div>
+    </div>
+    <div class="success-screen">
+      <div class="check">✓</div>
+      <h2>Thank you!</h2>
+      <p>Your review helps us grow. We truly appreciate it. 🙏</p>
+    </div>
+  </div>
+
+  <!-- Limit reached -->
+  <div class="card" id="limitReached" style="display:none;">
+    <div class="limit-msg">
+      <h2>Thanks for visiting!</h2>
+      <p>Our review system is currently at capacity. Please try again next month or leave a review directly on Google.</p>
+    </div>
+  </div>
+
+  <div class="powered-by">Powered by ReviewBot</div>
+</div>
+
+<script>
+  // ============ CONFIGURATION ============
+  // These are populated from URL params + N8N webhook response
+
+  const params = new URLSearchParams(window.location.search);
+  const BIZ_ID = params.get('biz') || 'reussi';
+
+  // N8N webhook URL - UPDATE THIS
+  const WEBHOOK_URL = 'https://n8n.srv1108393.hstgr.cloud/webhook/review-generate';
+
+  let selectedRating = 0;
+  let selectedLang = '';
+  let googleReviewURL = '';
+  let bizConfig = null;
+
+  // ============ INIT ============
+  async function init() {
+    try {
+      const res = await fetch(WEBHOOK_URL + '?action=config&biz=' + BIZ_ID);
+      bizConfig = await res.json();
+
+      // Update branding
+      if (bizConfig.business_name) {
+        document.getElementById('bizName').textContent = bizConfig.business_name;
+        document.getElementById('bizLogo').textContent = bizConfig.business_name[0];
+      }
+
+      // Check limit
+      if (bizConfig.limit_reached) {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('limitReached').style.display = 'block';
+        return;
+      }
+
+      // Populate languages
+      googleReviewURL = bizConfig.google_review_url || '';
+      const langGrid = document.getElementById('langGrid');
+      const languages = bizConfig.languages || ['French', 'German', 'Japanese', 'Mandarin', 'English'];
+      languages.forEach(lang => {
+        const btn = document.createElement('button');
+        btn.className = 'lang-btn';
+        btn.textContent = lang;
+        btn.onclick = () => selectLang(lang, btn);
+        langGrid.appendChild(btn);
+      });
+
+    } catch (e) {
+      console.error('Config load failed:', e);
+      // Fallback - show default languages
+      const langGrid = document.getElementById('langGrid');
+      ['French', 'German', 'Japanese', 'Mandarin', 'English'].forEach(lang => {
+        const btn = document.createElement('button');
+        btn.className = 'lang-btn';
+        btn.textContent = lang;
+        btn.onclick = () => selectLang(lang, btn);
+        langGrid.appendChild(btn);
+      });
+    }
+  }
+
+  // ============ INTERACTIONS ============
+  function setRating(n) {
+    selectedRating = n;
+    const stars = document.querySelectorAll('#starRating span');
+    stars.forEach((s, i) => s.classList.toggle('filled', i < n));
+    checkReady();
+  }
+
+  function selectLang(lang, btn) {
+    selectedLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    checkReady();
+  }
+
+  function checkReady() {
+    document.getElementById('btnGenerate').disabled = !(selectedRating && selectedLang);
+  }
+
+  // ============ GENERATE REVIEW ============
+  async function generateReview() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('reviewState').style.display = 'none';
+    document.getElementById('errorMsg').style.display = 'none';
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'generate',
+          biz: BIZ_ID,
+          rating: selectedRating,
+          language: selectedLang
+        })
+      });
+
+      const text = await res.text();
+      
+      // Try parsing as JSON first (for limit_reached responses)
+      try {
+        const data = JSON.parse(text);
+        if (data.limit_reached) {
+          document.getElementById('step2').style.display = 'none';
+          document.getElementById('limitReached').style.display = 'block';
+          return;
+        }
+        // If JSON with review field
+        if (data.review) {
+          document.getElementById('reviewText').textContent = data.review;
+        } else {
+          document.getElementById('reviewText').textContent = text;
+        }
+      } catch(e) {
+        // Plain text response - this is the review
+        if (!text || text.length < 10) throw new Error('Empty response');
+        document.getElementById('reviewText').textContent = text;
+      }
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('reviewState').style.display = 'block';
+
+    } catch (e) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('reviewState').style.display = 'block';
+      document.getElementById('errorMsg').style.display = 'block';
+      document.getElementById('errorMsg').textContent = 'Something went wrong. Please try again.';
+    }
+  }
+
+  function regenerate() {
+    generateReview();
+  }
+
+  // ============ COPY & GO ============
+  async function copyAndGo() {
+    const reviewText = document.getElementById('reviewText').textContent;
+
+    try {
+      await navigator.clipboard.writeText(reviewText);
+    } catch (e) {
+      // Fallback copy
+      const ta = document.createElement('textarea');
+      ta.value = reviewText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    // Log the copy event
+    try {
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'log_copy',
+          biz: BIZ_ID,
+          rating: selectedRating,
+          language: selectedLang,
+          review: reviewText
+        })
+      });
+    } catch (e) {}
+
+    // Show success
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+
+    // Open Google Reviews after a brief moment
+    setTimeout(() => {
+      if (googleReviewURL) {
+        window.open(googleReviewURL, '_blank');
+      }
+    }, 800);
+  }
+
+  // ============ START ============
+  init();
+</script>
+
+</body>
+</html>
